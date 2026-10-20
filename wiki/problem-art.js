@@ -1,6 +1,6 @@
 (function(){
   const figure=document.querySelector('.problem-figure');
-  const drawings=window.ENGRAVE && window.ENGRAVE.heroes;
+  const drawings=window.ENGRAVE && window.ENGRAVE.heroes.map(drawing=>drawing.id==="O7" ? window.WIKI_VALLEY : drawing).filter(Boolean);
   if(!figure || !drawings || !drawings.length)return;
   const art=document.getElementById('problem-art');
   const caption=document.getElementById('problem-caption');
