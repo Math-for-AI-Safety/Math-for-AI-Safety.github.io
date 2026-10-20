@@ -24,11 +24,11 @@ h2{font:600 1.35rem/1.25 "Source Serif 4",serif;margin:1.8em 0 .5em;padding-bott
 .tbl{width:100%;border-collapse:collapse;font-size:.92rem}.tbl th{text-align:left;font:600 .72rem "JetBrains Mono",monospace;text-transform:uppercase;letter-spacing:.04em;color:#555;border-bottom:2px solid #cfd3da;padding:6px 8px}.tbl td{padding:6px 8px;border-bottom:1px solid #eceef1;vertical-align:top}.tbl tr:hover td{background:#f6f8fc}.tbl td.tag{font:400 .78rem "JetBrains Mono",monospace;white-space:nowrap}
 .person{display:flex;gap:16px;align-items:center}.person img{border-radius:4px;filter:grayscale(1);object-fit:cover}
 .foot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;max-width:1180px;margin:0 auto;padding:16px 24px 30px;border-top:1px solid #e1e3e8;font:400 .76rem "JetBrains Mono",monospace;color:#6b7280}
-@media(max-width:820px){.shell{grid-template-columns:1fr}.side{border-right:0;border-bottom:1px solid #e1e3e8;padding:12px 20px}.side h4,.nav.small{display:none}.nav{display:flex;flex-wrap:wrap;gap:4px 16px}main{padding:20px}.toc,.infobox{float:none;width:auto;margin:0 0 16px}.cols{columns:1}header.top{padding:10px 16px}.brand span{display:none}.find input{width:150px}.tbl th:nth-child(4),.tbl td:nth-child(4),.tbl th:nth-child(3),.tbl td:nth-child(3){display:none}}
+@media(max-width:820px){.shell{grid-template-columns:1fr}.side{border-right:0;border-bottom:1px solid #e1e3e8;padding:12px 20px}.side .nav.small{display:block}.nav{display:flex;flex-wrap:wrap;gap:4px 16px}main{padding:20px}.toc,.infobox{float:none;width:auto;margin:0 0 16px}.cols{columns:1}header.top{padding:10px 16px}.brand span{display:none}.find input{width:150px}.tbl th:nth-child(4),.tbl td:nth-child(4),.tbl th:nth-child(3),.tbl td:nth-child(3){display:none}}
 
 /* Shared problem drawings from the main site. */
-.home-rail{float:right;width:250px;margin:4px 0 20px 24px}.home-rail .toc{float:none;width:100%;margin:12px 0 0}.problem-figure{width:100%;margin:0;color:#121417}
-@media(max-width:600px){.home-rail{float:none;width:100%;max-width:300px;margin:16px auto 24px}}
+.wiki-opening{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,min(40%,250px));gap:24px;align-items:start;margin-top:16px}.wiki-opening-text{min-width:0}.wiki-opening-text>.lead{margin-top:0}.home-rail{min-width:0;margin:0}.home-rail .toc{float:none;width:100%;margin:12px 0 0}.problem-figure{width:100%;margin:0;color:#121417}
+@media(max-width:600px){.wiki-opening{gap:12px}.home-rail .toc{padding:8px;font-size:.75rem}.home-rail figcaption{flex-wrap:wrap;gap:6px}#problem-caption{flex-basis:100%}.wiki-opening-text>.lead{font-size:.95rem}}
 .problem-art{aspect-ratio:7/5;border:1px solid #d8dbe0;background-color:#fff;background-image:linear-gradient(#eef0f3 1px,transparent 1px),linear-gradient(90deg,#eef0f3 1px,transparent 1px);background-size:16px 16px}
 .problem-art svg{display:block;width:100%;height:100%}
 .problem-figure figcaption{display:flex;align-items:center;gap:10px;padding:8px 0}
@@ -44,3 +44,42 @@ h2{font:600 1.35rem/1.25 "Source Serif 4",serif;margin:1.8em 0 .5em;padding-bott
 @keyframes wiki-fadein{to{opacity:1}}
 @keyframes wiki-spin{to{transform:rotate(360deg)}}
 @media(prefers-reduced-motion:reduce){.problem-art .engr .dr{animation:none;stroke-dashoffset:0}.problem-art .engr .fd,.problem-art .orbit{animation:none;opacity:1}}
+
+/* Reading, navigation, and keyboard access. */
+:focus-visible{outline:2px solid #1a4ea3;outline-offset:3px}
+.skip{position:fixed;top:8px;left:8px;z-index:30;padding:8px 14px;background:#fff;border:2px solid #1a4ea3;transform:translateY(-160%)}
+.skip:focus{transform:translateY(0)}
+main:focus{outline:none}
+.nav-group{margin-top:20px}
+.nav-group summary{cursor:pointer;font:600 .72rem "JetBrains Mono",monospace;text-transform:uppercase;letter-spacing:.04em;color:#555;padding:7px 0}
+.page-actions{display:flex;flex-wrap:wrap;gap:8px 20px;font-size:.85rem;margin:0 0 20px}
+.problem-metadata{float:none;width:100%;margin:0 0 24px}
+.problem-metadata th{width:150px}
+.problem-statement{min-width:0;overflow-wrap:break-word}
+.problem-statement>p:first-child{color:#555;font-size:.9rem}
+.problem-statement h2{margin-top:1.5em}
+.problem-statement h3{font-size:1.15rem}
+.problem-statement li{margin:6px 0}
+.problem-statement pre{overflow-x:auto;background:#f6f7f9;padding:12px;font-size:.85rem}
+.problem-statement table{display:block;max-width:100%;overflow-x:auto;border-collapse:collapse}
+.problem-statement td,.problem-statement th{border:1px solid #d8dbe0;padding:6px 10px}
+.problem-statement img{max-width:100%;height:auto}
+.katex-display{overflow-x:auto;overflow-y:hidden;padding:4px 0}
+.source-credit{font-size:.8rem;color:#6b7280;border-top:1px solid #e1e3e8;padding-top:16px;margin-top:28px}
+.mobile-problem-details{display:none}
+@media(max-width:820px){
+ .nav-group{margin-top:8px}
+ .nav-group summary{padding:10px 0}
+ .side .nav.small{margin-bottom:10px}
+ .side .nav.small a{display:inline-block;padding:4px 0}
+ .filters label{max-width:100%;min-width:0}
+ .filters select,.filters input{max-width:100%;min-width:0}
+ .mobile-problem-details{display:grid;gap:3px;margin-top:5px;font-size:.75rem;line-height:1.35;color:#6b7280}
+ .tbl{font-size:.85rem;table-layout:fixed}
+ .tbl th,.tbl td{padding:8px 4px;overflow-wrap:anywhere}
+ .tbl th:first-child{width:66px}.tbl th:nth-child(5){width:42px}.tbl th:nth-child(6){width:44px}
+ .tbl td.tag{font-size:.65rem;white-space:normal}
+ .tbl th{font-size:.6rem}
+ .tbl .st{font-size:.7rem}
+ .problem-metadata th{width:110px}
+}
