@@ -8,6 +8,7 @@ header.top{display:flex;align-items:center;justify-content:space-between;gap:16p
 .find input{font:400 .9rem "Source Serif 4",serif;padding:6px 10px;border:1px solid #bfc4cc;border-radius:3px;width:220px;background:#fff}
 .shell{display:grid;grid-template-columns:240px minmax(0,1fr);max-width:1180px;margin:0 auto;gap:0}
 .side{border-right:1px solid #e1e3e8;padding:22px 18px 30px 24px;font-size:.92rem}
+@media(min-width:821px){.side{position:sticky;top:0;align-self:start;max-height:100vh;max-height:100dvh;overflow-y:auto}}
 .side h4{margin:22px 0 6px;font:600 .72rem "JetBrains Mono",monospace;text-transform:uppercase;letter-spacing:.06em;color:#6b7280}
 .nav{list-style:none;margin:0;padding:0}.nav li{margin:3px 0}.nav li.on>a{font-weight:600;color:#111}.nav.small{font-size:.85rem;line-height:1.35}.nav.small li{margin:5px 0}
 main{padding:26px 34px 60px;min-width:0;max-width:880px}
