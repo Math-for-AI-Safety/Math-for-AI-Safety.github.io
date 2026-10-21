@@ -79,14 +79,16 @@ const Tabs=(function(){const n=document.querySelector('.notch');if(!n)return{mov
  return{move,index:h=>links.findIndex(a=>(new URL(a.href,location.href).pathname.split('/').pop()||'index.html')===h)}})();
 /* in-place navigation: swap <main>, keep the header, notch and footer */
 (function(){
+ const siteRoot=new URL('../',document.currentScript.src);
+ const pagePaths=new Set(['','index.html','problems.html','agendas.html','fields.html','about.html'].map(path=>new URL(path,siteRoot).pathname));
  const pageOf=u=>{const p=new URL(u,location.href).pathname.split('/').pop();return p||'index.html'};
  const cache=new Map(),get=u=>{const k=new URL(u,location.href);k.hash='';k.search='';const key=k.href;if(!cache.has(key))cache.set(key,fetch(key).then(r=>{if(!r.ok)throw new Error(r.status);return r.text()}).catch(e=>{cache.delete(key);throw e}));return cache.get(key)};
  const run=code=>{try{new Function(code)()}catch(e){console.error(e)}};
- const ours=a=>{if(!a||a.classList.contains('ver')||a.target||a.hasAttribute('download'))return false;const u=new URL(a.href,location.href);return u.origin===location.origin&&/(\.html|\/)$/.test(u.pathname)&&location.protocol!=='file:'};
+ const ours=a=>{if(!a||a.classList.contains('ver')||a.target||a.hasAttribute('download'))return false;const u=new URL(a.href,location.href);return u.origin===siteRoot.origin&&pagePaths.has(u.pathname)&&location.protocol!=='file:'};
  async function go(url,push){
   let html;try{html=await get(url)}catch(_){location.href=url;return}
   const doc=new DOMParser().parseFromString(html,'text/html'),nm=doc.querySelector('main'),code=doc.querySelector('script[data-page]');
-  if(!nm){location.href=url;return}
+  if(!nm||!doc.querySelector('.notch')){location.href=url;return}
   if(push)history.pushState({},'',url);
   document.title=doc.title;const md=doc.querySelector('meta[name=description]'),cd=document.querySelector('meta[name=description]');if(md&&cd)cd.content=md.content;
   const m=document.querySelector('main');m.innerHTML=nm.innerHTML;
