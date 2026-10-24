@@ -431,3 +431,5 @@ body:not(.curtain) footer.site-foot{padding-top:88px}
 /* Compact wiki entry in the main navigation. */
 .notch a.wiki-link{font-size:.65rem;padding:4px 8px}
 @media(max-width:780px){.notch.open a.wiki-link{font-size:.8rem;padding:9px 14px}}
+
+.team-list{display:grid;gap:16px}

@@ -84,3 +84,5 @@ main:focus{outline:none}
  .tbl .st{font-size:.7rem}
  .problem-metadata th{width:110px}
 }
+
+.team-list{display:grid;gap:16px}
