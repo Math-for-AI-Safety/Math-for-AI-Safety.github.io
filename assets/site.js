@@ -59,24 +59,37 @@ window.surveyChart=function(box,P,vis,focus){
   out+=`<g class="mk${p.resolved?' res':''}${on?'':' off'}" tabindex="${on?0:-1}" role="button" data-n="${p.n}" aria-label="${esc(p.id+': '+p.title)}" transform="translate(${q.x.toFixed(1)} ${q.y.toFixed(1)})"><path class="cross" d="M-${r+4} 0H-${r+1}M${r+1} 0H${r+4}M0 -${r+4}V-${r+1}M0 ${r+1}V${r+4}"/>${p.resolved?`<circle r="${r+3}" fill="none" stroke="#121417" stroke-width=".8"/>`:''}<circle class="m" r="${r}"/></g>`});
  box.innerHTML=`<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" class="grid-paper" role="group" aria-label="Survey chart of the open problems">${out}</svg>`};
 
-/* selected tab: corner brackets that flow from one tab to the next, leading corner first */
-const Tabs=(function(){const n=document.querySelector('.notch');if(!n)return{move(){}};
- const links=[...n.querySelectorAll('a:not(.ver)')];let cur=links.findIndex(a=>a.getAttribute('aria-current')==='page');
- n.insertAdjacentHTML('beforeend','<span class="brk tl" aria-hidden="true"></span><span class="brk br" aria-hidden="true"></span>');
- const tl=n.querySelector('.brk.tl'),br=n.querySelector('.brk.br'),C=7;
- const pos=a=>({tl:[a.offsetLeft,a.offsetTop],br:[a.offsetLeft+a.offsetWidth-C,a.offsetTop+a.offsetHeight-C]});
- const set=(el,[x,y])=>Object.assign(el.style,{left:x+'px',top:y+'px',opacity:1});
- const hide=()=>{tl.style.opacity=br.style.opacity=0};
- function place(){if(cur<0||getComputedStyle(links[cur]).display==='none'){hide();return}const p=pos(links[cur]);set(tl,p.tl);set(br,p.br)}
- function move(to){const from=cur;cur=to;links.forEach((a,i)=>i===to?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current'));
-  if(to<0){hide();return}if(from<0||from===to||RM||!tl.animate||getComputedStyle(links[to]).display==='none'){place();return}
-  const a=pos(links[from]),b=pos(links[to]),fwd=b.tl[0]>a.tl[0],dir=fwd?1:-1;
-  const flow=(el,k,delay,dur)=>{const [x0,y0]=a[k],[x1,y1]=b[k];el.getAnimations().forEach(x=>x.cancel());set(el,[x1,y1]);
-   el.animate([{transform:`translate(${x0-x1}px,${y0-y1}px)`},{transform:`translate(${(x0-x1)*.18}px,${y0-y1}px) scaleX(1.9)`,offset:.62},
-    {transform:`translate(${dir*-2.5}px,0) scaleX(.85)`,offset:.84},{transform:'none'}],{duration:dur,delay,easing:'cubic-bezier(.55,0,.3,1)',fill:'backwards'})};
-  flow(fwd?br:tl,fwd?'br':'tl',0,620);flow(fwd?tl:br,fwd?'tl':'br',110,700)}
- (document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(place);addEventListener('resize',place);
- return{move,index:h=>links.findIndex(a=>(new URL(a.href,location.href).pathname.split('/').pop()||'index.html')===h)}})();
+/* Selected tab: a glass bubble stretches and settles as it moves. */
+const Tabs=(function(){
+ const n=document.querySelector('.notch');if(!n)return{move(){},index(){return -1}};
+ const links=[...n.querySelectorAll('a:not(.ver)')];
+ let cur=links.findIndex(a=>a.getAttribute('aria-current')==='page');
+ const bubble=document.createElement('span');bubble.className='tab-bubble';bubble.setAttribute('aria-hidden','true');n.prepend(bubble);
+ const visible=()=>cur>=0&&getComputedStyle(links[cur]).display!=='none';
+ const stop=()=>bubble.getAnimations().forEach(animation=>animation.cancel());
+ function place(){
+  stop();if(!visible()){bubble.style.opacity=0;return}
+  const a=links[cur];Object.assign(bubble.style,{left:a.offsetLeft+'px',top:a.offsetTop+'px',width:a.offsetWidth+'px',height:a.offsetHeight+'px',opacity:1});
+ }
+ function move(to){
+  const from=cur,wasVisible=visible(),old=bubble.getBoundingClientRect();
+  cur=to;links.forEach((a,i)=>i===to?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current'));
+  place();if(!visible()||!wasVisible||from===to||matchMedia('(prefers-reduced-motion:reduce)').matches||!bubble.animate)return;
+  const target=bubble.getBoundingClientRect(),dx=old.x-target.x,dy=old.y-target.y;
+  const sx=old.width/target.width,sy=old.height/target.height;
+  const stretch=Math.min(Math.abs(dx)/240,.55);
+  bubble.animate([
+   {transform:`translate(${dx}px,${dy}px) scale(${sx},${sy})`},
+   {transform:`translate(${dx*.32}px,${dy*.32}px) scale(${1+stretch},.88)`,offset:.48},
+   {transform:'translate(0,0) scale(.96,1.05)',offset:.8},
+   {transform:'translate(0,0) scale(1,1)'}
+  ],{duration:560,easing:'cubic-bezier(.22,.75,.25,1)'});
+ }
+ (document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(place);
+ addEventListener('resize',place);
+ new ResizeObserver(place).observe(n);
+ return{move,index:h=>links.findIndex(a=>(new URL(a.href,location.href).pathname.split('/').pop()||'index.html')===h)};
+})();
 /* in-place navigation: swap <main>, keep the header, notch and footer */
 (function(){
  const siteRoot=new URL('../',document.currentScript.src);
