@@ -385,6 +385,10 @@ footer.site-foot{margin-top:-36px;position:relative;z-index:2;background:var(--n
 
 /* ===== footer curtain, brand-coloured, scan-line headline ===== */
 :root{--deep:#111a44;--deep-2:#18235a}
+/* Keep the footer reveal and overscroll backed by navy, including clipped corners. */
+html{background:var(--deep)}
+body{background:var(--deep)}
+header.top{background:var(--paper);box-shadow:0 0 0 100vmax var(--paper);clip-path:inset(0 -100vmax)}
 main{position:relative;z-index:2;background:var(--paper);border-radius:0 0 32px 32px;overflow:clip;min-height:60vh}
 footer.site-foot{position:relative;z-index:1;margin:0;border-radius:32px 32px 0 0;overflow:clip;padding:96px 0 28px;color:#e8ecff;
  background:linear-gradient(rgba(232,236,255,.045) 1px,transparent 1px) 0 0/100% 18px,linear-gradient(90deg,rgba(232,236,255,.045) 1px,transparent 1px) 0 0/18px 100%,var(--deep)}
